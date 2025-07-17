@@ -8,10 +8,10 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 const SALE_PRODUCT_IDS = [1, 5];
 
 const brands = [
-  { name: "Chanel", logo: "/logos/chanel.svg" },
-  { name: "Gucci", logo: "/logos/gucci.svg" },
-  { name: "Nike", logo: "/logos/nike.svg" },
-  { name: "Rolex", logo: "/logos/rolex.svg" },
+  { logo: "src/assets/Chanel.png" },
+  { logo: "src/assets/Nike.png" },
+  { logo: "src/assets/Rolex.png" },
+  { logo: "src/assets/Gucci.png" },
 ];
 
 const categories = [
