@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { GiLipstick, GiPerfumeBottle, GiSunglasses } from "react-icons/gi";
 import { FaShoePrints, FaShoppingBag, FaRegGem } from "react-icons/fa";
 import { MdWatch } from "react-icons/md";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const SALE_PRODUCT_IDS = [1, 5];
 
@@ -89,7 +90,7 @@ export const Home = () => {
       <div className="relative w-full h-[340px] md:h-[480px] flex items-center justify-center overflow-hidden">
         <video
           className="w-full h-full object-cover"
-          src="/banner.mp4"
+          src="src/assets/fashion.mp4"
           autoPlay
           loop
           muted
@@ -177,23 +178,7 @@ export const Home = () => {
         <h2 className="text-3xl font-bold text-center mb-8 text-pink-500">
           Kategorien
         </h2>
-        <div className="overflow-x-auto">
-          <div className="flex gap-6 px-4 md:px-10 pb-4 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-pink-50">
-            {categories.map((cat) => (
-              <a
-                key={cat.key}
-                href={`/category/${cat.key}`}
-                className="min-w-[130px] flex flex-col items-center bg-pink-50 hover:bg-pink-100 rounded-2xl shadow-md 
-                transition p-5 mx-1 cursor-pointer hover:scale-105 border border-pink-100"
-              >
-                <div className="mb-3">{cat.icon}</div>
-                <span className="text-sm font-medium text-pink-500 text-center">
-                  {cat.label}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
+        <CategorySlider categories={categories} />
       </section>
 
       {/* Marken */}
@@ -309,6 +294,74 @@ const Vorteil = ({ icon, text }) => {
     <div className="flex items-center gap-3 px-4 py-3 bg-pink-50 rounded-xl shadow">
       {icon}
       <span className="font-medium text-gray-700 text-base">{text}</span>
+    </div>
+  );
+};
+
+// Slider für Kategorien
+const CategorySlider = ({ categories }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const visibleCount = 4; // Anzahl der sichtbaren Kategorien (anpassbar)
+  const maxIndex = Math.max(0, categories.length - visibleCount);
+
+  const sliderRef = useRef(null);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+  };
+
+  return (
+    <div className="relative flex items-center justify-center">
+      <button
+        aria-label="Zurück"
+        onClick={handlePrev}
+        disabled={currentIndex === 0}
+        className={`absolute left-0 z-10 bg-pink-500 text-white rounded-full p-2 shadow-lg hover:bg-pink-600 transition ${
+          currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        style={{ top: "50%", transform: "translateY(-50%)" }}
+      >
+        <FaChevronLeft className="text-2xl" />
+      </button>
+      <div
+        ref={sliderRef}
+        className="flex gap-6 px-4 md:px-10 pb-4 transition-transform duration-300"
+        style={{
+          overflow: "hidden",
+          minWidth: "0",
+        }}
+      >
+        {categories
+          .slice(currentIndex, currentIndex + visibleCount)
+          .map((cat) => (
+            <a
+              key={cat.key}
+              href={`/category/${cat.key}`}
+              className="min-w-[130px] flex flex-col items-center bg-pink-50 hover:bg-pink-100 rounded-2xl shadow-md 
+            transition p-5 mx-1 cursor-pointer hover:scale-105 border border-pink-100"
+            >
+              <div className="mb-3">{cat.icon}</div>
+              <span className="text-sm font-medium text-pink-500 text-center">
+                {cat.label}
+              </span>
+            </a>
+          ))}
+      </div>
+      <button
+        aria-label="Weiter"
+        onClick={handleNext}
+        disabled={currentIndex === maxIndex}
+        className={`absolute right-0 z-10 bg-pink-500 text-white rounded-full p-2 shadow-lg hover:bg-pink-600 transition ${
+          currentIndex === maxIndex ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        style={{ top: "50%", transform: "translateY(-50%)" }}
+      >
+        <FaChevronRight className="text-2xl" />
+      </button>
     </div>
   );
 };
