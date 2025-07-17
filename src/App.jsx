@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import MainLayout from "./Layout/MainLayout";
 import Product from "./components/Product";
-
 import Cart from "./components/Cart";
 
 function App() {
