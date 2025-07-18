@@ -103,7 +103,7 @@ export const Home = () => {
           </span>
           <a
             href="#offers"
-            className="mt-8 px-7 py-3 rounded-full bg-[#e8b09e] text-white font-semibold shadow hover:bg-[#D59C8C] hover:scale-105 transition text-lg"
+            className="mt-8 px-7 py-3 rounded-xl bg-[#e8b09e] text-white font-semibold shadow hover:bg-[#D59C8C] hover:scale-105 transition text-lg"
           >
             Discover Now
           </a>
@@ -111,7 +111,7 @@ export const Home = () => {
       </div>
 
       {/* Benefits */}
-      <section className="w-full flex flex-wrap gap-4 justify-center items-center py-6 bg-white shadow-sm border-b-[#326287]">
+      <section className="w-full flex flex-wrap gap-10 justify-center items-center py-6 bg-white shadow-sm border-b-[#326287]">
         <Benefit
           icon={<GoPackageDependents className="text-[#e8b09e] text-2xl" />}
           text="Free Delivery (DE)"
@@ -127,8 +127,8 @@ export const Home = () => {
       </section>
 
       {/* Offers */}
-      <section id="offers" className="py-10 px-4 max-w-5xl mx-auto w-full">
-        <h2 className="text-3xl font-bold text-center mb-8 text-[#326287] flex items-center gap-2 justify-center">
+      <section id="offers" className="py-10 px-4 max-w-5xl mb-8 mx-auto w-full">
+        <h2 className="text-3xl font-bold text-center mb-8 mt-8 text-[#326287] flex items-center gap-2 justify-center">
           Hot Deals <BsFire />
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -140,16 +140,16 @@ export const Home = () => {
             saleProducts.map((p) => (
               <div
                 key={p.id}
-                className="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-center group hover:shadow-2xl 
+                className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center group hover:shadow-2xl 
                 transition border border-[#e8b09e]/30"
               >
-                <div className="relative w-44 h-44 flex items-center justify-center mb-4 overflow-hidden rounded-2xl">
+                <div className="relative w-44 h-44 flex items-center justify-center mb-4 overflow-hidden rounded-xl">
                   <img
                     src={p.images[0]}
                     alt={p.title}
                     className="w-full h-full object-cover scale-105 group-hover:scale-110 transition"
                   />
-                  <span className="absolute top-1 right-30 bg-[#e8b09e] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  <span className="absolute top-1 right-30 bg-[#e8b09e] text-white text-xs font-semibold px-3 py-1 rounded-lg">
                     SALE
                   </span>
                 </div>
@@ -160,7 +160,7 @@ export const Home = () => {
                   {p.description}
                 </p>
                 <p className="text-[#e8b09e] font-bold text-xl">{p.price} €</p>
-                <button className="mt-4 px-6 py-2 rounded-full bg-[#e8b09e] text-white font-semibold shadow hover:bg-[#D59C8C] transition flex items-baseline gap-2">
+                <button className="mt-4 px-6 py-2 rounded-xl bg-[#e8b09e] text-white font-semibold shadow hover:bg-[#D59C8C] transition flex items-baseline gap-2">
                   <BsCart2 /> Add to Cart
                 </button>
               </div>

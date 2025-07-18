@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaShoppingCart, FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import AddToCart from "./AddToCart";
-
+import { BsCart2 } from "react-icons/bs";
 const Product = () => {
   const categories = [
     "beauty",
@@ -66,9 +66,9 @@ const Product = () => {
     for (let i = 0; i < 5; i++) {
       stars.push(
         i < fullStars ? (
-          <FaStar key={i} className="text-yellow-400" />
+          <FaStar key={i} className="text-[#E8B09E]" />
         ) : (
-          <FaRegStar key={i} className="text-yellow-300" />
+          <FaRegStar key={i} className="text-[#E8B09E]" />
         )
       );
     }
@@ -80,7 +80,7 @@ const Product = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 flex gap-6 px-6 md:px-12">
+    <div className="min-h-screen bg-gray-50 pt-30 flex gap-6 px-6 md:px-12">
       {/* Sidebar */}
       <aside
         className="hidden md:flex items-start flex-col sticky top-24 h-[calc(100vh-6rem)] w-52 bg-white 
@@ -157,10 +157,10 @@ const Product = () => {
                     </span>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className="flex items-center gap-2 bg-[#e8b09e] hover:bg-[#D59C8C] transition-colors rounded-full px-4 py-2
+                      className="flex items-center gap-2 bg-[#e8b09e] hover:bg-[#D59C8C] transition-colors rounded-xl px-4 py-2
                        text-white font-semibold shadow-md"
                     >
-                      <FaShoppingCart />
+                      <BsCart2 />
                       Add to Cart
                     </button>
                   </div>
