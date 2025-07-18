@@ -36,3 +36,7 @@ body {
 .navbar-scrolled .nav-link::after {
   background-color: #d59c8c;
 }
+
+/* .chat-button {
+  background-color: "linear-gradient(90deg, #d59c8c 10%, #326287 50%, #FFFFFF 100%)"
+} */

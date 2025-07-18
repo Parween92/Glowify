@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import api from "../../api";
+import { useNavigate } from "react-router-dom";
 import { BsStars } from "react-icons/bs";
 import { GoPersonAdd } from "react-icons/go";
 import { GoPerson } from "react-icons/go";
 
-const AuthForm = () => {
+export const AuthForm = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -43,15 +44,21 @@ const AuthForm = () => {
     setSuccess("");
 
     try {
-      const response = await api.login(loginData);
-      setSuccess("Login erfolgreich!");
-
-      // Redirect or update app state here
+      // Simulate successful login - replace with actual API call
+      setSuccess("Login successful!");
+      
+      // Simulate storing auth token
+      localStorage.setItem('authToken', 'dummy-token');
+      
+      // Dispatch custom event to notify navbar of auth status change
+      window.dispatchEvent(new Event('authStatusChanged'));
+      
+      // Timer für Navigation nach erfolgreichem Login
       setTimeout(() => {
-        window.location.href = "/dashboard"; // Adjust redirect as needed
+        navigate("/dashboard");
       }, 1500);
     } catch (error) {
-      setError(error.message || "Login fehlgeschlagen");
+      setError(error.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -65,15 +72,14 @@ const AuthForm = () => {
 
     // Validate password confirmation
     if (registerData.password !== registerData.confirmPassword) {
-      setError("Passwörter stimmen nicht überein");
+      setError("Passwords do not match.");
       setLoading(false);
       return;
     }
 
     try {
-      const { confirmPassword, ...userData } = registerData;
-      const response = await api.register(userData);
-      setSuccess("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
+      // Simulate successful registration - replace with actual API call
+      setSuccess("Registration successful!");
 
       // Switch to login form after successful registration
       setTimeout(() => {
@@ -86,7 +92,7 @@ const AuthForm = () => {
         });
       }, 2000);
     } catch (error) {
-      setError(error.message || "Registrierung fehlgeschlagen");
+      setError(error.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -100,14 +106,17 @@ const AuthForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-30 px-6 md:px-12 pb-20">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden" >
         {/* Header */}
-        <div className="px-8 py-6">
-          <h2 className="flex justify-center gap-2 items-center text-3xl font-bold text-[#326287] text-center">
+        <div className="px-8 py-6" style={{
+          background: "linear-gradient(50deg, #326287 25%, #D59C8C 85%, #E8B09E 100%)",
+          transition: "background 0.5s ease-in-out"
+        }}>
+          <h2 className="flex justify-center gap-2 items-center text-3xl font-bold text-white text-center">
             <BsStars className="text-[#E8B09E]" />
             Glowify Shop
           </h2>
-          <p className="text-[#326287] text-center mt-1">
+          <p className="text-white text-center mt-1">
             {isLogin ? "Welcome back!" : "Welcome!"}
           </p>
         </div>
@@ -164,7 +173,8 @@ const AuthForm = () => {
                 type="submit"
                 disabled={loading}
                 className="w-full flex gap-2 items-center justify-center bg-[#326287] hover:bg-[#264a66] transition text-white py-2 rounded"
-              ><GoPerson />
+              >
+                <GoPerson />
                 {loading ? "Login..." : "Login"}
               </button>
             </form>
@@ -235,7 +245,8 @@ const AuthForm = () => {
                 type="submit"
                 disabled={loading}
                 className="w-full flex gap-2 items-center justify-center bg-[#326287] hover:bg-[#264a66] transition text-white py-2 rounded"
-              ><GoPersonAdd />
+              >
+                <GoPersonAdd />
                 {loading ? "Register..." : "Register"}
               </button>
             </form>
@@ -258,5 +269,3 @@ const AuthForm = () => {
     </div>
   );
 };
-
-export default AuthForm;

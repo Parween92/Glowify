@@ -195,7 +195,7 @@ export const Home = () => {
                   key={category.key}
                   href={`/category/${category.key}`}
                   className="flex flex-col items-center justify-center bg-white rounded-xl shadow-lg group p-4 hover:shadow-2xl 
-                transition border border-[#e8b09e]/30 cursor-pointer h-[110px] w-[130px]"
+      transition border border-[#e8b09e]/30 cursor-pointer h-[110px] w-[130px]"
                 >
                   <div className="text-[#e8b09e] text-3xl mb-2 scale-105 group-hover:scale-110 transition">
                     {category.icon}
@@ -218,9 +218,9 @@ export const Home = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-15 justify-center items-center">
           {brands.map((brand) => (
             <div
-              key={brand.name}
+              key={brand.name} // Problem: brand.name ist undefined!
               className="flex flex-col items-center p-4 rounded-xl bg-[#e8b09e] shadow-lg group hover:shadow-2xl 
-               border border-[#e8b09e]/30 transition"
+       border border-[#e8b09e]/30 transition"
             >
               <img
                 src={brand.logo}

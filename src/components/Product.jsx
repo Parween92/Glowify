@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { BsCart2, BsHeart, BsHeartFill } from "react-icons/bs";
 import AddToCart from "./AddToCart";
-import { BsCart2 } from "react-icons/bs";
+
 const Product = () => {
   const categories = [
     "beauty",
@@ -21,6 +22,13 @@ const Product = () => {
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [modalProduct, setModalProduct] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    // Load favorites from localStorage
+    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    setFavorites(storedFavorites);
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,6 +68,24 @@ const Product = () => {
     alert(`"${product.title}" has been added to the cart.`);
   };
 
+  const toggleFavorite = (product) => {
+    const isFavorite = favorites.some(fav => fav.id === product.id);
+    let updatedFavorites;
+    
+    if (isFavorite) {
+      updatedFavorites = favorites.filter(fav => fav.id !== product.id);
+    } else {
+      updatedFavorites = [...favorites, product];
+    }
+    
+    setFavorites(updatedFavorites);
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+  };
+
+  const isFavorite = (productId) => {
+    return favorites.some(fav => fav.id === productId);
+  };
+
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const stars = [];
@@ -82,13 +108,8 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-30 flex gap-6 px-6 md:px-12 ">
       {/* Sidebar */}
-      <aside
-        className="hidden md:flex items-start flex-col sticky top-24 h-[calc(100vh-6rem)] w-52 bg-white 
-      rounded-lg shadow-md p-6 overflow-y-auto "
-      >
-        <h3 className="text-3xl font-bold text-center mb-6 text-[#326287]">
-          Filter
-        </h3>
+      <aside className="hidden md:flex items-start flex-col sticky top-24 h-[calc(100vh-6rem)] w-52 bg-white rounded-lg shadow-md p-6 overflow-y-auto">
+        <h3 className="text-3xl font-bold text-center mb-6 text-[#326287]">Filter</h3>
         <button
           onClick={() => setSelectedCategory(null)}
           className={`mb-3 text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
@@ -112,13 +133,11 @@ const Product = () => {
         ))}
       </aside>
 
-      {/* Produkte */}
+      {/* Products */}
       <main className="flex-1">
         {error && <p className="text-red-400 mb-4">{error}</p>}
         {loading ? (
-          <p className="text-center text-lg text-[#326287]">
-            Loading products...
-          </p>
+          <p className="text-center text-lg text-[#326287]">Loading products...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
             {products.map((product) => (
@@ -139,6 +158,19 @@ const Product = () => {
                         className="w-full h-full object-contain transition-transform duration-500 hover:scale-110"
                       />
                       {renderStars(product.rating)}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(product);
+                        }}
+                        className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors"
+                      >
+                        {isFavorite(product.id) ? (
+                          <BsHeartFill className="text-red-500" />
+                        ) : (
+                          <BsHeart className="text-gray-500" />
+                        )}
+                      </button>
                     </>
                   )}
                 </div>
@@ -157,8 +189,7 @@ const Product = () => {
                     </span>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className="flex items-center gap-2 bg-[#e8b09e] hover:bg-[#D59C8C] transition-colors rounded-xl px-4 py-2
-                       text-white font-semibold shadow-md"
+                      className="flex items-center gap-2 bg-[#e8b09e] hover:bg-[#D59C8C] transition-colors rounded-xl px-4 py-2 text-white font-semibold shadow-md"
                     >
                       <BsCart2 />
                       Add to Cart
@@ -169,6 +200,7 @@ const Product = () => {
             ))}
           </div>
         )}
+
         {/* Modal */}
         {modalProduct && (
           <div
