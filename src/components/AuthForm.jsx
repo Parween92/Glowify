@@ -1,0 +1,260 @@
+import React, { useState } from 'react';
+import api from '../../api';
+
+const AuthForm = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [registerData, setRegisterData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const handleLoginChange = (e) => {
+    setLoginData({
+      ...loginData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleRegisterChange = (e) => {
+    setRegisterData({
+      ...registerData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const response = await api.login(loginData);
+      setSuccess('Login erfolgreich!');
+      
+      // Redirect or update app state here
+      setTimeout(() => {
+        window.location.href = '/dashboard'; // Adjust redirect as needed
+      }, 1500);
+      
+    } catch (error) {
+      setError(error.message || 'Login fehlgeschlagen');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    // Validate password confirmation
+    if (registerData.password !== registerData.confirmPassword) {
+      setError('Passwörter stimmen nicht überein');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { confirmPassword, ...userData } = registerData;
+      const response = await api.register(userData);
+      setSuccess('Registrierung erfolgreich! Sie können sich jetzt anmelden.');
+      
+      // Switch to login form after successful registration
+      setTimeout(() => {
+        setIsLogin(true);
+        setRegisterData({
+          name: '',
+          email: '',
+          password: '',
+          confirmPassword: ''
+        });
+      }, 2000);
+      
+    } catch (error) {
+      setError(error.message || 'Registrierung fehlgeschlagen');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const switchForm = () => {
+    setIsLogin(!isLogin);
+    setError('');
+    setSuccess('');
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-6">
+          <h2 className="text-3xl font-bold text-white text-center">
+            ✨ Glowify Shop
+          </h2>
+          <p className="text-purple-100 text-center mt-2">
+            {isLogin ? 'Willkommen zurück!' : 'Erstelle dein Konto'}
+          </p>
+        </div>
+
+        <div className="p-8">
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+              {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
+              {success}
+            </div>
+          )}
+
+          {/* Login Form */}
+          {isLogin ? (
+            <form onSubmit={handleLoginSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  E-Mail
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={loginData.email}
+                  onChange={handleLoginChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  placeholder="ihre.email@beispiel.de"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Passwort
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={loginData.password}
+                  onChange={handleLoginChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Anmelden...' : 'Anmelden'}
+              </button>
+            </form>
+          ) : (
+            /* Register Form */
+            <form onSubmit={handleRegisterSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={registerData.name}
+                  onChange={handleRegisterChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  placeholder="Ihr vollständiger Name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  E-Mail
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={registerData.email}
+                  onChange={handleRegisterChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  placeholder="ihre.email@beispiel.de"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Passwort
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={registerData.password}
+                  onChange={handleRegisterChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Passwort bestätigen
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={registerData.confirmPassword}
+                  onChange={handleRegisterChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Registrieren...' : 'Registrieren'}
+              </button>
+            </form>
+          )}
+
+          {/* Form Switch */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600">
+              {isLogin ? 'Noch kein Konto?' : 'Bereits registriert?'}{' '}
+              <button
+                onClick={switchForm}
+                className="text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
+              >
+                {isLogin ? 'Registrieren' : 'Anmelden'}
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthForm;

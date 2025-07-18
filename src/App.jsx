@@ -3,6 +3,7 @@ import { Home } from "./pages/Home";
 import MainLayout from "./Layout/MainLayout";
 import Product from "./components/Product";
 import Cart from "./components/Cart";
+import AuthForm from "./components/AuthForm";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path="login" element={<AuthForm />} />
 
           <Route path="products" element={<Product />} />
 

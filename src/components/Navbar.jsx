@@ -59,6 +59,22 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive
+                  ? `border-b-4 pb-1 ${
+                      scrolled ? "border-white" : "border-[#e8b09e]"
+                    }`
+                  : `hover:border-b-4 pb-1 transition ${
+                      scrolled ? "hover:border-white" : "hover:border-[#326287]"
+                    }`
+              }
+            >
+              LOGIN
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               to="/cart"
               className={({ isActive }) =>
                 `nav-link text-lg font-semibold transition-colors duration-300 ${
