@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { BsCart2 } from "react-icons/bs";
+
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -23,8 +25,7 @@ const Navbar = () => {
           className={`font-extrabold text-xl tracking-wide select-none cursor-pointer transition-colors duration-500 ${
             scrolled ? "text-white" : "text-[#326287]"
           }`}
-        >
-          MyShop
+        ><img src="/src/assets/Glowify-Logo.png" className="h-15"/>
         </div>
 
         <ul
@@ -32,29 +33,64 @@ const Navbar = () => {
             scrolled ? "text-white" : "text-[#326287]"
           }`}
         >
-          {["/", "/products", "/cart"].map((path, i) => {
-            const label = ["HOME", "PRODUCTS", "CART"][i];
-            return (
-              <li key={path}>
-                <NavLink
-                  to={path}
-                  className={({ isActive }) =>
-                    isActive
-                      ? `border-b-4 pb-1 ${
-                          scrolled ? "border-white" : "border-[#e8b09e]"
-                        }`
-                      : `hover:border-b-4 pb-1 transition ${
-                          scrolled
-                            ? "hover:border-white"
-                            : "hover:border-[#326287]"
-                        }`
-                  }
-                >
-                  {label}
-                </NavLink>
-              </li>
-            );
-          })}
+          <li>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                isActive
+                  ? `border-b-4 pb-1 ${
+                      scrolled ? "border-white" : "border-[#e8b09e]"
+                    }`
+                  : `hover:border-b-4 pb-1 transition ${
+                      scrolled
+                        ? "hover:border-white"
+                        : "hover:border-[#326287]"
+                    }`
+              }
+            >
+              HOME
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/products"
+              className={({ isActive }) =>
+                isActive
+                  ? `border-b-4 pb-1 ${
+                      scrolled ? "border-white" : "border-[#e8b09e]"
+                    }`
+                  : `hover:border-b-4 pb-1 transition ${
+                      scrolled
+                        ? "hover:border-white"
+                        : "hover:border-[#326287]"
+                    }`
+              }
+            ><div className="flex gap-2 justify-center items-baseline">
+              PRODUCTS
+              </div>
+            </NavLink>
+          </li>
+          <li >
+            <NavLink
+              to="/cart"
+              className={({ isActive }) =>
+                isActive
+                  ? `border-b-4 pb-1 ${
+                      scrolled ? "border-white" : "border-[#e8b09e]"
+                    }`
+                  : `hover:border-b-4 pb-1 transition ${
+                      scrolled
+                        ? "hover:border-white"
+                        : "hover:border-[#326287]"
+                    }`
+              }
+            ><div className="flex gap-2 justify-center items-baseline">
+              <BsCart2 />
+              CART
+              </div>
+            </NavLink>
+            
+          </li>
         </ul>
       </div>
     </nav>

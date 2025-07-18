@@ -1,9 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { GiLipstick, GiPerfumeBottle, GiSunglasses } from "react-icons/gi";
 import { FaShoePrints, FaShoppingBag, FaRegGem } from "react-icons/fa";
 import { MdWatch } from "react-icons/md";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { HiArrowUturnLeft } from "react-icons/hi2";
+import { GoPackageDependents } from "react-icons/go";
+import { CiCreditCard1 } from "react-icons/ci";
+import { BsCart2, BsFire } from "react-icons/bs";
 
 const SALE_PRODUCT_IDS = [1, 5];
 
@@ -18,47 +21,42 @@ const categories = [
   {
     key: "beauty",
     label: "Beauty",
-    icon: <GiLipstick className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    icon: <GiLipstick className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
     key: "fragrances",
     label: "Fragrances",
-    icon: <GiPerfumeBottle className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    icon: <GiPerfumeBottle className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "mens-shoes",
-    label: "Men's Shoes",
-    icon: <FaShoePrints className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    key: "shoes",
+    label: "Shoes",
+    icon: <FaShoePrints className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "womens-shoes",
-    label: "Women's Shoes",
-    icon: <FaShoePrints className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    key: "watches",
+    label: "Watches",
+    icon: <MdWatch className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "mens-watches",
-    label: "Men's Watches",
-    icon: <MdWatch className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    key: "bags",
+    label: "Bags",
+    icon: <FaShoppingBag className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "womens-watches",
-    label: "Women's Watches",
-    icon: <MdWatch className="text-[#D59C8C] text-3xl md:text-4xl" />,
-  },
-  {
-    key: "womens-bags",
-    label: "Women's Bags",
-    icon: <FaShoppingBag className="text-[#D59C8C] text-3xl md:text-4xl" />,
-  },
-  {
-    key: "womens-jewellery",
+    key: "jewellery",
     label: "Jewellery",
-    icon: <FaRegGem className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    icon: <FaRegGem className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
     key: "sunglasses",
     label: "Sunglasses",
-    icon: <GiSunglasses className="text-[#D59C8C] text-3xl md:text-4xl" />,
+    icon: <GiSunglasses className="text-[#e8b09e] text-3xl md:text-4xl" />,
+  },
+  {
+    key: "accessories",
+    label: "Accessories",
+    icon: <FaRegGem className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
 ];
 
@@ -87,7 +85,7 @@ export const Home = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Video */}
-      <div className="relative w-full h-[340px] md:h-[480px] flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-[360px] md:h-[580px] flex items-center justify-center overflow-hidden">
         <video
           className="w-full h-full object-cover"
           src="src/assets/fashion.mp4"
@@ -98,50 +96,52 @@ export const Home = () => {
         />
         <div className="absolute inset-0 bg-black/35 flex flex-col items-center justify-center">
           <h1 className="text-white text-5xl md:text-7xl font-extrabold drop-shadow-xl tracking-wide font-sans mb-3">
-            Glowify
+            Glowify Your Life
           </h1>
           <span className="text-white text-lg md:text-2xl font-light drop-shadow-lg">
-            Schönheit. Stil. Deine Auswahl.
+            Your Beauty. Your Style. Your Choice.
           </span>
           <a
-            href="#angebote"
-            className="mt-8 px-7 py-3 rounded-full bg-[#D59C8C] text-white font-semibold shadow hover:scale-105 transition text-lg"
+            href="#offers"
+            className="mt-8 px-7 py-3 rounded-full bg-[#e8b09e] text-white font-semibold shadow hover:bg-[#D59C8C] hover:scale-105 transition text-lg"
           >
-            Jetzt entdecken
+            Discover Now
           </a>
         </div>
       </div>
 
-      {/* Vorteile */}
+      {/* Benefits */}
       <section className="w-full flex flex-wrap gap-4 justify-center items-center py-6 bg-white shadow-sm border-b-[#326287]">
-        <Vorteil
-          icon={<FaShoppingBag className="text-[#D59C8C] text-2xl" />}
-          text="Kostenlose Lieferung (DE)"
+        <Benefit
+          icon={<GoPackageDependents className="text-[#e8b09e] text-2xl" />}
+          text="Free Delivery (DE)"
         />
-        <Vorteil
-          icon={<FaRegGem className="text-[#D59C8C] text-2xl" />}
-          text="Klarna Ratenkauf"
+        <Benefit
+          icon={<CiCreditCard1 className="text-[#e8b09e] text-3xl" />}
+          text="Klarna Payment"
         />
-        <Vorteil
-          icon={<MdWatch className="text-[#D59C8C] text-2xl" />}
-          text="30 Tage Rückgaberecht"
+        <Benefit
+          icon={<HiArrowUturnLeft className="text-[#e8b09e] text-xl" />}
+          text="30-Day Return Policy"
         />
       </section>
 
-      {/* Angebote */}
-      <section id="angebote" className="py-10 px-4 max-w-5xl mx-auto w-full">
-        <h2 className="text-3xl font-bold text-center mb-8 text-[#326287]">
-          Aktuelle Angebote
+      {/* Offers */}
+      <section id="offers" className="py-10 px-4 max-w-5xl mx-auto w-full">
+        <h2 className="text-3xl font-bold text-center mb-8 text-[#326287] flex items-center gap-2 justify-center">
+          Hot Deals <BsFire />
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {loadingSale ? (
-            <div className="text-[#D59C8C] text-center col-span-2">Lädt...</div>
+            <div className="text-[#e8b09e] text-center col-span-2">
+              Loading...
+            </div>
           ) : (
             saleProducts.map((p) => (
               <div
                 key={p.id}
                 className="bg-white rounded-3xl shadow-lg p-6 flex flex-col items-center group hover:shadow-2xl 
-                transition border border-[#D59C8C]/30"
+                transition border border-[#e8b09e]/30"
               >
                 <div className="relative w-44 h-44 flex items-center justify-center mb-4 overflow-hidden rounded-2xl">
                   <img
@@ -149,7 +149,7 @@ export const Home = () => {
                     alt={p.title}
                     className="w-full h-full object-cover scale-105 group-hover:scale-110 transition"
                   />
-                  <span className="absolute top-2 left-2 bg-[#D59C8C] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  <span className="absolute top-1 right-30 bg-[#e8b09e] text-white text-xs font-semibold px-3 py-1 rounded-full">
                     SALE
                   </span>
                 </div>
@@ -159,9 +159,9 @@ export const Home = () => {
                 <p className="text-[#326287]/70 text-sm mb-2 line-clamp-2 text-center">
                   {p.description}
                 </p>
-                <p className="text-[#D59C8C] font-bold text-xl">{p.price} €</p>
-                <button className="mt-4 px-6 py-2 rounded-full bg-[#D59C8C] text-white font-semibold shadow hover:scale-105 transition">
-                  In den Warenkorb
+                <p className="text-[#e8b09e] font-bold text-xl">{p.price} €</p>
+                <button className="mt-4 px-6 py-2 rounded-full bg-[#e8b09e] text-white font-semibold shadow hover:bg-[#D59C8C] transition flex items-baseline gap-2">
+                  <BsCart2 /> Add to Cart
                 </button>
               </div>
             ))
@@ -169,29 +169,63 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Kategorien */}
+      {/* Categories */}
       <section className="py-10 px-4 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-8 text-[#326287]">
-          Kategorien
-        </h2>
-        <CategorySlider categories={categories} />
+        <div className="flex flex-col md:flex-row items-center justify-center gap-35 py-10 px-4 max-w-5xl mx-auto w-full">
+          {/* Video Section */}
+          <div className="w-auto flex justify-center">
+            <video
+              className="w-[500px] h-[700px] object-[center_30%] object-cover rounded-xl shadow-lg"
+              src="src/assets/video2.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          </div>
+
+          {/* Categories Section */}
+          <div className="flex flex-col justify-center items-center w-auto">
+            <h2 className="text-3xl font-bold mb-8 text-[#326287]">
+              Categories
+            </h2>
+            <div className="w-auto grid grid-cols-2 gap-12">
+              {categories.map((category) => (
+                <a
+                  key={category.key}
+                  href={`/category/${category.key}`}
+                  className="flex flex-col items-center justify-center bg-white rounded-xl shadow-lg group p-4 hover:shadow-2xl 
+                transition border border-[#e8b09e]/30 cursor-pointer h-[110px] w-[130px]"
+                >
+                  <div className="text-[#e8b09e] text-3xl mb-2 scale-105 group-hover:scale-110 transition">
+                    {category.icon}
+                  </div>
+                  <span className="text-sm font-semibold text-[#326287]">
+                    {category.label}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Marken */}
-      <section className="py-10 px-4 max-w-5xl mx-auto w-full">
+      {/* Brands */}
+      <section className="p-20 px-4 max-w-5xl mx-auto w-full">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#326287]">
-          Unsere Marken
+          Our Top Brands
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 justify-center items-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-15 justify-center items-center">
           {brands.map((brand) => (
             <div
               key={brand.name}
-              className="flex flex-col items-center p-4 rounded-xl bg-white shadow hover:shadow-lg transition"
+              className="flex flex-col items-center p-4 rounded-xl bg-[#e8b09e] shadow-lg group hover:shadow-2xl 
+               border border-[#e8b09e]/30 transition"
             >
               <img
                 src={brand.logo}
                 alt={brand.name}
-                className="w-16 h-16 object-contain mb-2"
+                className="w-24 h-20 object-contain mb-2 scale-105 group-hover:scale-110 transition"
               />
               <span className="font-medium text-[#326287] text-lg">
                 {brand.name}
@@ -204,64 +238,9 @@ export const Home = () => {
   );
 };
 
-const Vorteil = ({ icon, text }) => (
+const Benefit = ({ icon, text }) => (
   <div className="flex items-center gap-2 px-3 py-2">
     {icon}
     <span className="text-sm font-semibold text-[#326287]">{text}</span>
   </div>
 );
-
-const CategorySlider = ({ categories }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const visibleCount = 4;
-  const maxIndex = Math.max(0, categories.length - visibleCount);
-  const sliderRef = useRef(null);
-
-  return (
-    <div className="relative flex items-center justify-center">
-      <button
-        aria-label="Zurück"
-        onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
-        disabled={currentIndex === 0}
-        className={`absolute left-0 z-10 bg-[#D59C8C] text-white rounded-full p-2 shadow-lg hover:bg-[#326287] transition ${
-          currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        style={{ top: "50%", transform: "translateY(-50%)" }}
-      >
-        <FaChevronLeft className="text-2xl" />
-      </button>
-      <div
-        ref={sliderRef}
-        className="flex gap-6 px-4 md:px-10 pb-4 transition-transform duration-300"
-        style={{ overflow: "hidden", minWidth: "0" }}
-      >
-        {categories
-          .slice(currentIndex, currentIndex + visibleCount)
-          .map((cat) => (
-            <a
-              key={cat.key}
-              href={`/category/${cat.key}`}
-              className="min-w-[130px] flex flex-col items-center bg-[#FCE9E4] hover:bg-[#F5C6A5] rounded-2xl shadow-md 
-              transition p-5 mx-1 cursor-pointer hover:scale-105 border border-[#D59C8C]/30"
-            >
-              <div className="mb-3">{cat.icon}</div>
-              <span className="text-sm font-medium text-[#326287] text-center">
-                {cat.label}
-              </span>
-            </a>
-          ))}
-      </div>
-      <button
-        aria-label="Weiter"
-        onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, maxIndex))}
-        disabled={currentIndex === maxIndex}
-        className={`absolute right-0 z-10 bg-[#D59C8C] text-white rounded-full p-2 shadow-lg hover:bg-[#326287] transition ${
-          currentIndex === maxIndex ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        style={{ top: "50%", transform: "translateY(-50%)" }}
-      >
-        <FaChevronRight className="text-2xl" />
-      </button>
-    </div>
-  );
-};
