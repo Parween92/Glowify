@@ -1,55 +1,57 @@
-import React, { useState } from 'react';
-import api from '../../api';
+import React, { useState } from "react";
+import api from "../../api";
+import { BsStars } from "react-icons/bs";
+import { GoPersonAdd } from "react-icons/go";
+import { GoPerson } from "react-icons/go";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const [loginData, setLoginData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
 
   const [registerData, setRegisterData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleLoginChange = (e) => {
     setLoginData({
       ...loginData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleRegisterChange = (e) => {
     setRegisterData({
       ...registerData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
       const response = await api.login(loginData);
-      setSuccess('Login erfolgreich!');
-      
+      setSuccess("Login erfolgreich!");
+
       // Redirect or update app state here
       setTimeout(() => {
-        window.location.href = '/dashboard'; // Adjust redirect as needed
+        window.location.href = "/dashboard"; // Adjust redirect as needed
       }, 1500);
-      
     } catch (error) {
-      setError(error.message || 'Login fehlgeschlagen');
+      setError(error.message || "Login fehlgeschlagen");
     } finally {
       setLoading(false);
     }
@@ -58,12 +60,12 @@ const AuthForm = () => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     // Validate password confirmation
     if (registerData.password !== registerData.confirmPassword) {
-      setError('Passwörter stimmen nicht überein');
+      setError("Passwörter stimmen nicht überein");
       setLoading(false);
       return;
     }
@@ -71,21 +73,20 @@ const AuthForm = () => {
     try {
       const { confirmPassword, ...userData } = registerData;
       const response = await api.register(userData);
-      setSuccess('Registrierung erfolgreich! Sie können sich jetzt anmelden.');
-      
+      setSuccess("Registrierung erfolgreich! Sie können sich jetzt anmelden.");
+
       // Switch to login form after successful registration
       setTimeout(() => {
         setIsLogin(true);
         setRegisterData({
-          name: '',
-          email: '',
-          password: '',
-          confirmPassword: ''
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
         });
       }, 2000);
-      
     } catch (error) {
-      setError(error.message || 'Registrierung fehlgeschlagen');
+      setError(error.message || "Registrierung fehlgeschlagen");
     } finally {
       setLoading(false);
     }
@@ -93,20 +94,21 @@ const AuthForm = () => {
 
   const switchForm = () => {
     setIsLogin(!isLogin);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-30 px-6 md:px-12 pb-20">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-6">
-          <h2 className="text-3xl font-bold text-white text-center">
-            ✨ Glowify Shop
+        <div className="px-8 py-6">
+          <h2 className="flex justify-center gap-2 items-center text-3xl font-bold text-[#326287] text-center">
+            <BsStars className="text-[#E8B09E]" />
+            Glowify Shop
           </h2>
-          <p className="text-purple-100 text-center mt-2">
-            {isLogin ? 'Willkommen zurück!' : 'Erstelle dein Konto'}
+          <p className="text-[#326287] text-center mt-1">
+            {isLogin ? "Welcome back!" : "Welcome!"}
           </p>
         </div>
 
@@ -129,7 +131,7 @@ const AuthForm = () => {
           {isLogin ? (
             <form onSubmit={handleLoginSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[#326287] mb-2">
                   E-Mail
                 </label>
                 <input
@@ -138,14 +140,14 @@ const AuthForm = () => {
                   value={loginData.email}
                   onChange={handleLoginChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
-                  placeholder="ihre.email@beispiel.de"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  placeholder="name@mail.de"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Passwort
+                <label className="block text-sm font-medium text-[#326287] mb-2">
+                  Password
                 </label>
                 <input
                   type="password"
@@ -153,7 +155,7 @@ const AuthForm = () => {
                   value={loginData.password}
                   onChange={handleLoginChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
                   placeholder="••••••••"
                 />
               </div>
@@ -161,16 +163,16 @@ const AuthForm = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Anmelden...' : 'Anmelden'}
+                className="w-full flex gap-2 items-center justify-center bg-[#326287] hover:bg-[#264a66] transition text-white py-2 rounded"
+              ><GoPerson />
+                {loading ? "Login..." : "Login"}
               </button>
             </form>
           ) : (
             /* Register Form */
             <form onSubmit={handleRegisterSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[#326287] mb-2">
                   Name
                 </label>
                 <input
@@ -179,13 +181,13 @@ const AuthForm = () => {
                   value={registerData.name}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
-                  placeholder="Ihr vollständiger Name"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  placeholder="name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[#326287] mb-2">
                   E-Mail
                 </label>
                 <input
@@ -194,14 +196,14 @@ const AuthForm = () => {
                   value={registerData.email}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
-                  placeholder="ihre.email@beispiel.de"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  placeholder="name@mail.de"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Passwort
+                <label className="block text-sm font-medium text-[#326287] mb-2">
+                  Password
                 </label>
                 <input
                   type="password"
@@ -209,14 +211,14 @@ const AuthForm = () => {
                   value={registerData.password}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
                   placeholder="••••••••"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Passwort bestätigen
+                <label className="block text-sm font-medium text-[#326287] mb-2">
+                  Confirm Your Password
                 </label>
                 <input
                   type="password"
@@ -224,7 +226,7 @@ const AuthForm = () => {
                   value={registerData.confirmPassword}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
                   placeholder="••••••••"
                 />
               </div>
@@ -232,22 +234,22 @@ const AuthForm = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Registrieren...' : 'Registrieren'}
+                className="w-full flex gap-2 items-center justify-center bg-[#326287] hover:bg-[#264a66] transition text-white py-2 rounded"
+              ><GoPersonAdd />
+                {loading ? "Register..." : "Register"}
               </button>
             </form>
           )}
 
           {/* Form Switch */}
           <div className="mt-8 text-center">
-            <p className="text-gray-600">
-              {isLogin ? 'Noch kein Konto?' : 'Bereits registriert?'}{' '}
+            <p className="text-[#326287]">
+              {isLogin ? "New here?" : "Already registered?"}{" "}
               <button
                 onClick={switchForm}
-                className="text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
+                className="text-[#326287] hover:text-[#D59C8C] font-semibold transition duration-200"
               >
-                {isLogin ? 'Registrieren' : 'Anmelden'}
+                {isLogin ? "Register now →" : "Login here →"}
               </button>
             </p>
           </div>

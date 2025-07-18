@@ -80,11 +80,11 @@ const Product = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-30 flex gap-6 px-6 md:px-12">
+    <div className="min-h-screen bg-gray-50 pt-30 flex gap-6 px-6 md:px-12 ">
       {/* Sidebar */}
       <aside
         className="hidden md:flex items-start flex-col sticky top-24 h-[calc(100vh-6rem)] w-52 bg-white 
-      rounded-lg shadow-md p-6 overflow-y-auto"
+      rounded-lg shadow-md p-6 overflow-y-auto "
       >
         <h3 className="text-3xl font-bold text-center mb-6 text-[#326287]">
           Filter
@@ -101,7 +101,7 @@ const Product = () => {
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`mb-2 text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
+            className={`mb-2 capitalize text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
               selectedCategory === cat
                 ? "font-semibold underline"
                 : "font-normal"

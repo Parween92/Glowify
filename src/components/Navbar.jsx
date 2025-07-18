@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { BsCart2 } from "react-icons/bs";
+import { GoPerson } from "react-icons/go";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -61,18 +62,18 @@ const Navbar = () => {
             <NavLink
               to="/login"
               className={({ isActive }) =>
-                isActive
-                  ? `border-b-4 pb-1 ${
-                      scrolled ? "border-white" : "border-[#e8b09e]"
-                    }`
-                  : `hover:border-b-4 pb-1 transition ${
-                      scrolled ? "hover:border-white" : "hover:border-[#326287]"
-                    }`
+                `nav-link text-lg font-semibold transition-colors duration-300 ${
+                  isActive ? "font-bold" : ""
+                } ${scrolled ? "text-white" : "text-[#326287]"}`
               }
             >
-              LOGIN
+              <div className="flex items-center gap-2">
+                <GoPerson className="text-xl"/>
+                LOGIN
+              </div>
             </NavLink>
           </li>
+
           <li>
             <NavLink
               to="/cart"
