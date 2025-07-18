@@ -3,15 +3,15 @@ const AddToCart = ({ product }) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(product);
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to your cart!");
+    alert(`${product.title} has been added to your shopping cart!`);
   };
 
   return (
     <button
       onClick={handleCart}
-      className="mt-3 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition"
+      className="mt-3 px-4 py-2 bg-[#e8b09e] text-white rounded hover:bg-[#D59C8C] transition"
     >
-      Add To Cart
+      Add to Cart
     </button>
   );
 };

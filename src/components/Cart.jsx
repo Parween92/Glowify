@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FiTrash2 } from "react-icons/fi";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -16,18 +17,19 @@ const Cart = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 bg-white min-h-screen">
-      <h2 className="text-3xl font-bold text-center mb-6 text-pink-500">
-        Warenkorb
+    <div className="max-w-4xl mt-9 mx-auto px-4 py-10 bg-white min-h-screen">
+      <h2 className="text-3xl font-bold text-center mb-6 text-[#326287]">
+        Shopping Cart
       </h2>
+
       {cartItems.length === 0 ? (
-        <div className="text-center text-gray-500 space-y-2">
-          <p className="italic">Dein Warenkorb ist leer.</p>
+        <div className="text-center text-[#326287]/70 space-y-2">
+          <p className="italic">Your cart is empty.</p>
           <Link
             to="/products"
-            className="text-pink-500 font-semibold underline hover:text-pink-600"
+            className="text-[#D59C8C] font-semibold underline hover:text-[#D59C8C]"
           >
-            Zum Shop →
+            Go to Shop →
           </Link>
         </div>
       ) : (
@@ -38,19 +40,21 @@ const Cart = () => {
               className="flex items-center border-b border-gray-200 pb-4 gap-4"
             >
               <img
-                src={item.image}
+                src={item.image || (item.images && item.images[0])}
                 alt={item.title}
                 className="w-20 h-20 object-contain"
               />
+
               <div className="flex-1">
-                <p className="font-semibold text-gray-800">{item.title}</p>
-                <p className="text-pink-600 font-medium">{item.price} €</p>
+                <p className="font-semibold text-[#326287]">{item.title}</p>
+                <p className="text-[#B3746E] font-medium">{item.price} €</p>
               </div>
               <button
                 onClick={() => handleRemove(item.id)}
-                className="text-red-500 text-xl hover:scale-110 transition"
+                className="text-[#D59C8C] hover:text-[#D59C8C] text-2xl transition transform hover:scale-110"
+                title="Remove"
               >
-                ❌
+                <FiTrash2 />
               </button>
             </li>
           ))}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaShoppingCart, FaStar, FaRegStar } from "react-icons/fa";
 import AddToCart from "./AddToCart";
 
 const Product = () => {
@@ -19,7 +20,6 @@ const Product = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-
   const [modalProduct, setModalProduct] = useState(null);
 
   useEffect(() => {
@@ -44,8 +44,7 @@ const Product = () => {
           setProducts(results.flat());
         }
       } catch (error) {
-        console.error(error);
-        setError("Fehler beim Laden der Produkte.");
+        setError("Error loading products.");
       } finally {
         setLoading(false);
       }
@@ -54,100 +53,157 @@ const Product = () => {
     fetchProducts();
   }, [selectedCategory]);
 
+  const handleAddToCart = (product) => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const updatedCart = [...storedCart, product];
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    alert(`"${product.title}" has been added to the cart.`);
+  };
+
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        i < fullStars ? (
+          <FaStar key={i} className="text-yellow-400" />
+        ) : (
+          <FaRegStar key={i} className="text-yellow-300" />
+        )
+      );
+    }
+    return (
+      <div className="absolute top-2 left-2 flex gap-1 bg-white/80 px-2 py-1 rounded">
+        {stars}
+      </div>
+    );
+  };
+
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar Filter */}
-      <aside className="w-48 p-4 border-r border-gray-300 sticky top-0 h-screen overflow-y-auto">
-        <h3 className="mb-4 font-semibold text-lg">Filter</h3>
-        <ul className="list-none p-0 m-0">
-          <li>
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`mb-2 w-full text-left cursor-pointer ${
-                !selectedCategory ? "font-bold" : "font-normal"
-              }`}
-            >
-              Alle Kategorien
-            </button>
-          </li>
-          {categories.map((cat) => (
-            <li key={cat}>
-              <button
-                onClick={() => setSelectedCategory(cat)}
-                className={`mb-2 w-full text-left cursor-pointer ${
-                  selectedCategory === cat ? "font-bold" : "font-normal"
-                }`}
-              >
-                {cat.replace(/-/g, " ")}
-              </button>
-            </li>
-          ))}
-        </ul>
+    <div className="min-h-screen bg-gray-50 pt-24 flex gap-6 px-6 md:px-12">
+      {/* Sidebar */}
+      <aside
+        className="hidden md:flex items-start flex-col sticky top-24 h-[calc(100vh-6rem)] w-52 bg-white 
+      rounded-lg shadow-md p-6 overflow-y-auto"
+      >
+        <h3 className="text-3xl font-bold text-center mb-6 text-[#326287]">
+          Filter
+        </h3>
+        <button
+          onClick={() => setSelectedCategory(null)}
+          className={`mb-3 text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
+            !selectedCategory ? "font-bold underline" : "font-normal"
+          }`}
+        >
+          All Categories
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`mb-2 text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
+              selectedCategory === cat
+                ? "font-semibold underline"
+                : "font-normal"
+            }`}
+          >
+            {cat.replace(/-/g, " ")}
+          </button>
+        ))}
       </aside>
 
-      {/* Produke */}
-      <main className="flex-1 p-4">
-        {error && <p className="text-red-600 mb-4">{error}</p>}
+      {/* Produkte */}
+      <main className="flex-1">
+        {error && <p className="text-red-400 mb-4">{error}</p>}
         {loading ? (
-          <p>Lade Produkte...</p>
+          <p className="text-center text-lg text-[#326287]">
+            Loading products...
+          </p>
         ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="border border-gray-300 p-4 relative group cursor-pointer"
+                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col"
               >
-                {/* Bild mit Hover-Overlay */}
                 <div
                   onClick={() => setModalProduct(product)}
-                  className="relative overflow-hidden"
+                  className="relative overflow-hidden rounded-t-xl"
+                  style={{ aspectRatio: "4 / 3" }}
                 >
-                  <img
-                    src={product.images[0]}
-                    alt={product.title}
-                    className="w-full block"
-                  />
-                  <div
-                    className="absolute inset-0 bg-black bg-opacity-60 text-white flex items-center 
-                  justify-center font-bold text-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    Details
+                  {product.images?.length > 0 && (
+                    <>
+                      <img
+                        src={product.images[0]}
+                        alt={product.title}
+                        className="w-full h-full object-contain transition-transform duration-500 hover:scale-110"
+                      />
+                      {renderStars(product.rating)}
+                    </>
+                  )}
+                </div>
+                <div className="p-5 flex flex-col flex-grow">
+                  <h3 className="text-[#326287] font-semibold text-lg mb-1 truncate">
+                    {product.title}
+                  </h3>
+                  <p className="text-[#326287]/80 mb-4 text-sm flex-grow">
+                    {product.description.length > 80
+                      ? product.description.slice(0, 77) + "..."
+                      : product.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-[#326287] font-semibold text-xl">
+                      {product.price} €
+                    </span>
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="flex items-center gap-2 bg-[#e8b09e] hover:bg-[#D59C8C] transition-colors rounded-full px-4 py-2
+                       text-white font-semibold shadow-md"
+                    >
+                      <FaShoppingCart />
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
-
-                <h3 className="mt-2 font-semibold">{product.title}</h3>
-                <p>Price: {product.price} €</p>
-                <AddToCart product={product} />
               </div>
             ))}
           </div>
         )}
-
-        {/* Popup Modal */}
+        {/* Modal */}
         {modalProduct && (
           <div
             onClick={() => setModalProduct(null)}
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 cursor-pointer"
+            className="fixed inset-0 z-50 bg-[#326287] bg-opacity-60 flex items-center justify-center px-4 sm:px-8 py-24 overflow-y-auto"
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="bg-white p-8 rounded-lg max-w-md w-11/12 max-h-[80vh] overflow-y-auto cursor-auto"
+              className="bg-white rounded-2xl shadow-xl w-full max-w-4xl p-8 relative max-h-[80vh] overflow-y-auto"
             >
-              <h2 className="text-xl font-bold mb-4">{modalProduct.title}</h2>
-              <img
-                src={modalProduct.images[0]}
-                alt={modalProduct.title}
-                className="w-full mb-4"
-              />
-              <p className="mb-2">{modalProduct.description}</p>
-              <p className="mb-2">Price: {modalProduct.price} €</p>
-              <p className="mb-4">Rating: {modalProduct.rating} / 5</p>
+              <h2 className="text-3xl font-bold text-[#326287] mb-4">
+                {modalProduct.title}
+              </h2>
+              <div className="relative mb-4">
+                <img
+                  src={modalProduct.images[0]}
+                  alt={modalProduct.title}
+                  className="rounded-xl w-full max-h-[300px] object-contain"
+                />
+                {renderStars(modalProduct.rating)}
+              </div>
+              <p className="text-[#326287]/90 mb-6">
+                {modalProduct.description}
+              </p>
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-[#326287] font-semibold text-2xl">
+                  Price: {modalProduct.price} €
+                </p>
+              </div>
               <AddToCart product={modalProduct} />
               <button
                 onClick={() => setModalProduct(null)}
-                className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+                className="mt-8 px-6 py-3 bg-[#E8B09E] rounded-xl text-white hover:bg-[#D59C8C] transition-colors w-full font-semibold"
               >
-                Schließen
+                Close
               </button>
             </div>
           </div>
