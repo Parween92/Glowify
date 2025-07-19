@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsStars } from "react-icons/bs";
-import { GoPersonAdd } from "react-icons/go";
-import { GoPerson } from "react-icons/go";
+import { GoPersonAdd, GoPerson } from "react-icons/go";
 
 export const AuthForm = () => {
   const navigate = useNavigate();
@@ -44,16 +43,26 @@ export const AuthForm = () => {
     setSuccess("");
 
     try {
-      // Simulate successful login - replace with actual API call
       setSuccess("Login successful!");
-      
-      // Simulate storing auth token
-      localStorage.setItem('authToken', 'dummy-token');
-      
-      // Dispatch custom event to notify navbar of auth status change
-      window.dispatchEvent(new Event('authStatusChanged'));
-      
-      // Timer für Navigation nach erfolgreichem Login
+      localStorage.setItem("authToken", "dummy-token");
+
+      // Hier User aus localStorage
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      const userName =
+        savedUser && savedUser.email === loginData.email
+          ? savedUser.name
+          : loginData.email;
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: userName,
+          email: loginData.email,
+        })
+      );
+
+      window.dispatchEvent(new Event("authStatusChanged"));
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
@@ -70,7 +79,6 @@ export const AuthForm = () => {
     setError("");
     setSuccess("");
 
-    // Validate password confirmation
     if (registerData.password !== registerData.confirmPassword) {
       setError("Passwords do not match.");
       setLoading(false);
@@ -78,10 +86,17 @@ export const AuthForm = () => {
     }
 
     try {
-      // Simulate successful registration - replace with actual API call
       setSuccess("Registration successful!");
 
-      // Switch to login form after successful registration
+      // User lokal speichern
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: registerData.name,
+          email: registerData.email,
+        })
+      );
+
       setTimeout(() => {
         setIsLogin(true);
         setRegisterData({
@@ -106,12 +121,14 @@ export const AuthForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-30 px-6 md:px-12 pb-20">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden" >
-        {/* Header */}
-        <div className="px-8 py-6" style={{
-          background: "linear-gradient(50deg, #326287 25%, #D59C8C 85%, #E8B09E 100%)",
-          transition: "background 0.5s ease-in-out"
-        }}>
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div
+          className="px-8 py-6"
+          style={{
+            background:
+              "linear-gradient(50deg, #326287 25%, #D59C8C 85%, #E8B09E 100%)",
+          }}
+        >
           <h2 className="flex justify-center gap-2 items-center text-3xl font-bold text-white text-center">
             <BsStars className="text-[#E8B09E]" />
             Glowify Shop
@@ -122,21 +139,17 @@ export const AuthForm = () => {
         </div>
 
         <div className="p-8">
-          {/* Error Message */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-red-100 border border-gray-200 text-[#D59C8C] px-4 py-3 rounded-lg mb-6">
               {error}
             </div>
           )}
-
-          {/* Success Message */}
           {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-gray-200 border border-gray-200 text-[#D59C8C] px-4 py-3 rounded-lg mb-6">
               {success}
             </div>
           )}
 
-          {/* Login Form */}
           {isLogin ? (
             <form onSubmit={handleLoginSubmit} className="space-y-6">
               <div>
@@ -149,8 +162,7 @@ export const AuthForm = () => {
                   value={loginData.email}
                   onChange={handleLoginChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
-                  placeholder="name@mail.de"
+                  className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
 
@@ -164,22 +176,20 @@ export const AuthForm = () => {
                   value={loginData.password}
                   onChange={handleLoginChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
-                  placeholder="••••••••"
+                  className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex gap-2 items-center justify-center bg-[#326287] hover:bg-[#264a66] transition text-white py-2 rounded"
+                className="w-full bg-[#326287] hover:bg-[#264a66] text-white py-2 rounded"
               >
-                <GoPerson />
+                <GoPerson className="inline-block mr-2" />
                 {loading ? "Login..." : "Login"}
               </button>
             </form>
           ) : (
-            /* Register Form */
             <form onSubmit={handleRegisterSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-[#326287] mb-2">
@@ -191,8 +201,7 @@ export const AuthForm = () => {
                   value={registerData.name}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
-                  placeholder="name"
+                  className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
 
@@ -206,8 +215,7 @@ export const AuthForm = () => {
                   value={registerData.email}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
-                  placeholder="name@mail.de"
+                  className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
 
@@ -221,14 +229,13 @@ export const AuthForm = () => {
                   value={registerData.password}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
-                  placeholder="••••••••"
+                  className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#326287] mb-2">
-                  Confirm Your Password
+                  Confirm Password
                 </label>
                 <input
                   type="password"
@@ -236,29 +243,27 @@ export const AuthForm = () => {
                   value={registerData.confirmPassword}
                   onChange={handleRegisterChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
-                  placeholder="••••••••"
+                  className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex gap-2 items-center justify-center bg-[#326287] hover:bg-[#264a66] transition text-white py-2 rounded"
+                className="w-full bg-[#326287] hover:bg-[#264a66] text-white py-2 rounded"
               >
-                <GoPersonAdd />
+                <GoPersonAdd className="inline-block mr-2" />
                 {loading ? "Register..." : "Register"}
               </button>
             </form>
           )}
 
-          {/* Form Switch */}
           <div className="mt-8 text-center">
             <p className="text-[#326287]">
               {isLogin ? "New here?" : "Already registered?"}{" "}
               <button
                 onClick={switchForm}
-                className="text-[#326287] hover:text-[#D59C8C] font-semibold transition duration-200"
+                className="text-[#D59C8C] font-semibold"
               >
                 {isLogin ? "Register now →" : "Login here →"}
               </button>
@@ -269,3 +274,5 @@ export const AuthForm = () => {
     </div>
   );
 };
+
+export default AuthForm;

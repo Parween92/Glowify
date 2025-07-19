@@ -19,7 +19,7 @@ const Navbar = () => {
   useEffect(() => {
     // Check if user is logged in by checking for auth token
     const checkAuthStatus = () => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       setIsLoggedIn(!!token);
     };
 
@@ -27,14 +27,14 @@ const Navbar = () => {
     checkAuthStatus();
 
     // Listen for storage changes (e.g., when user logs in/out in another tab)
-    window.addEventListener('storage', checkAuthStatus);
+    window.addEventListener("storage", checkAuthStatus);
 
     // Custom event listener for login/logout actions
-    window.addEventListener('authStatusChanged', checkAuthStatus);
+    window.addEventListener("authStatusChanged", checkAuthStatus);
 
     return () => {
-      window.removeEventListener('storage', checkAuthStatus);
-      window.removeEventListener('authStatusChanged', checkAuthStatus);
+      window.removeEventListener("storage", checkAuthStatus);
+      window.removeEventListener("authStatusChanged", checkAuthStatus);
     };
   }, []);
 
@@ -62,7 +62,7 @@ const Navbar = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `nav-link text-m font-semibold transition-colors pt-3 duration-300 ${
+                `nav-link text-xs font-semibold transition-colors pt-3 duration-300 ${
                   isActive ? "font-bold" : ""
                 } ${scrolled ? "text-white" : "text-[#326287]"}`
               }
@@ -74,7 +74,7 @@ const Navbar = () => {
             <NavLink
               to="/products"
               className={({ isActive }) =>
-                `nav-link text-m font-semibold transition-colors pt-3 duration-300 ${
+                `nav-link text-xs font-semibold transition-colors pt-3 duration-300 ${
                   isActive ? "font-bold" : ""
                 } ${scrolled ? "text-white" : "text-[#326287]"}`
               }
@@ -82,18 +82,18 @@ const Navbar = () => {
               PRODUCTS
             </NavLink>
           </li>
-          
+
           {/* Dynamic Login/Dashboard Link */}
           <li>
             <NavLink
               to={isLoggedIn ? "/dashboard" : "/login"}
               className={({ isActive }) =>
-                `nav-link text-m font-semibold transition-colors pt-3 duration-300 ${
+                `nav-link text-xs font-semibold transition-colors pt-3 duration-300 ${
                   isActive ? "font-bold" : ""
                 } ${scrolled ? "text-white" : "text-[#326287]"}`
               }
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2">
                 {isLoggedIn ? (
                   <>
                     <BsPersonCircle />
@@ -101,7 +101,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <GoPerson className="text-xl"/>
+                    <GoPerson className="text-sm" />
                     LOGIN
                   </>
                 )}
@@ -113,12 +113,12 @@ const Navbar = () => {
             <NavLink
               to="/cart"
               className={({ isActive }) =>
-                `nav-link text-m font-semibold transition-colors pt-3 duration-300 ${
+                `nav-link text-xs font-semibold transition-colors pt-3 duration-300 ${
                   isActive ? "font-bold" : ""
                 } ${scrolled ? "text-white" : "text-[#326287]"}`
               }
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2">
                 <BsCart2 />
                 CART
               </div>
