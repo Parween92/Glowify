@@ -37,58 +37,38 @@ export const AuthForm = () => {
     });
   };
 
-  // LOGIN über Backend
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccess("");
-
     try {
-      // Backend-Login!
       const response = await api.login(loginData);
-
-      setSuccess("Login erfolgreich!");
-      if (response.token) {
-        localStorage.setItem("authToken", response.token);
-      }
-      if (response.user) {
-        localStorage.setItem("user", JSON.stringify(response.user));
-      }
-
+      setSuccess("Login successful!");
       window.dispatchEvent(new Event("authStatusChanged"));
-
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
-      setError(error.message || "Login fehlgeschlagen");
+      setError(error.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccess("");
-
     if (registerData.password !== registerData.confirmPassword) {
       setError("Passwords do not match.");
       setLoading(false);
       return;
     }
-
     try {
       const response = await api.register(registerData);
-
       setSuccess("Registration successful!");
-      if (response.user) {
-        localStorage.setItem("user", JSON.stringify(response.user));
-      }
-
       setTimeout(() => {
         setIsLogin(true);
         setRegisterData({
@@ -129,7 +109,6 @@ export const AuthForm = () => {
             {isLogin ? "Welcome back!" : "Welcome!"}
           </p>
         </div>
-
         <div className="p-8">
           {error && (
             <div className="bg-red-100 border border-gray-200 text-[#D59C8C] px-4 py-3 rounded-lg mb-6">
@@ -141,7 +120,6 @@ export const AuthForm = () => {
               {success}
             </div>
           )}
-
           {isLogin ? (
             <form onSubmit={handleLoginSubmit} className="space-y-6">
               <div>
@@ -157,7 +135,6 @@ export const AuthForm = () => {
                   className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-[#326287] mb-2">
                   Password
@@ -171,7 +148,6 @@ export const AuthForm = () => {
                   className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={loading}
@@ -196,7 +172,6 @@ export const AuthForm = () => {
                   className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-[#326287] mb-2">
                   E-Mail
@@ -210,7 +185,6 @@ export const AuthForm = () => {
                   className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-[#326287] mb-2">
                   Password
@@ -224,7 +198,6 @@ export const AuthForm = () => {
                   className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-[#326287] mb-2">
                   Confirm Password
@@ -238,7 +211,6 @@ export const AuthForm = () => {
                   className="w-full px-3 py-2 rounded border focus:ring-1 focus:ring-[#264a66]"
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={loading}
@@ -249,7 +221,6 @@ export const AuthForm = () => {
               </button>
             </form>
           )}
-
           <div className="mt-8 text-center">
             <p className="text-[#326287]">
               {isLogin ? "New here?" : "Already registered?"}{" "}
