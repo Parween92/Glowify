@@ -19,11 +19,11 @@ class GlowifyAPI {
     try {
       const response = await fetch(url, config);
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Request failed');
       }
-      
+
       return data;
     } catch (error) {
       console.error('API Request failed:', error);
@@ -43,17 +43,37 @@ class GlowifyAPI {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
-    
+
     if (response.token) {
       localStorage.setItem('authToken', response.token);
     }
-    
+
+    if (response.user) {
+      localStorage.setItem('user', JSON.stringify(response.user));
+    }
+
     return response;
   }
 
   async logout() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
     return { success: true };
+  }
+
+  async getProducts() {
+    return this.makeRequest('/products');
+  }
+
+  async getProductById(id) {
+    return this.makeRequest(`/products/${id}`);
+  }
+
+  async createOrder(orderData) {
+    return this.makeRequest('/orders', {
+      method: 'POST',
+      body: JSON.stringify(orderData),
+    });
   }
 }
 

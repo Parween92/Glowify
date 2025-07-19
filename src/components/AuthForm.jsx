@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsStars } from "react-icons/bs";
 import { GoPersonAdd, GoPerson } from "react-icons/go";
+import api from "../../api";
 
 export const AuthForm = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export const AuthForm = () => {
     });
   };
 
+  // LOGIN über Backend
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -43,23 +45,16 @@ export const AuthForm = () => {
     setSuccess("");
 
     try {
-      setSuccess("Login successful!");
-      localStorage.setItem("authToken", "dummy-token");
+      // Backend-Login!
+      const response = await api.login(loginData);
 
-      // Hier User aus localStorage
-      const savedUser = JSON.parse(localStorage.getItem("user"));
-      const userName =
-        savedUser && savedUser.email === loginData.email
-          ? savedUser.name
-          : loginData.email;
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: userName,
-          email: loginData.email,
-        })
-      );
+      setSuccess("Login erfolgreich!");
+      if (response.token) {
+        localStorage.setItem("authToken", response.token);
+      }
+      if (response.user) {
+        localStorage.setItem("user", JSON.stringify(response.user));
+      }
 
       window.dispatchEvent(new Event("authStatusChanged"));
 
@@ -67,11 +62,12 @@ export const AuthForm = () => {
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
-      setError(error.message || "Login failed");
+      setError(error.message || "Login fehlgeschlagen");
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
@@ -86,16 +82,12 @@ export const AuthForm = () => {
     }
 
     try {
-      setSuccess("Registration successful!");
+      const response = await api.register(registerData);
 
-      // User lokal speichern
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: registerData.name,
-          email: registerData.email,
-        })
-      );
+      setSuccess("Registration successful!");
+      if (response.user) {
+        localStorage.setItem("user", JSON.stringify(response.user));
+      }
 
       setTimeout(() => {
         setIsLogin(true);
