@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar, FaRegStar, FaShoePrints, FaShoppingBag, FaRegGem } from "react-icons/fa";
+import { GiLipstick, GiPerfumeBottle, GiSunglasses } from "react-icons/gi";
 import { BsCart2, BsHeart, BsHeartFill } from "react-icons/bs";
 import AddToCart from "./AddToCart";
+import { BsStars } from "react-icons/bs";
 
 const Product = () => {
+  const [searchParams] = useSearchParams();
+  const urlCategory = searchParams.get("category");
+
   const categories = [
-    "beauty",
-    "fragrances",
-    "mens-shoes",
-    "womens-shoes",
-    "mens-watches",
-    "womens-watches",
-    "womens-bags",
-    "womens-jewellery",
-    "sunglasses",
+    { key: "beauty", label: "Beauty", icon: <GiLipstick className="text-white text-lg" /> },
+    { key: "fragrances", label: "Fragrances", icon: <GiPerfumeBottle className="text-white text-lg" /> },
+    { key: "womens-shoes", label: "Shoes", icon: <FaShoePrints className="text-white text-lg" /> },
+    { key: "womens-bags", label: "Bags", icon: <FaShoppingBag className="text-white text-lg" /> },
+    { key: "womens-jewellery", label: "Jewellery", icon: <FaRegGem className="text-white text-lg" /> },
+    { key: "sunglasses", label: "Sunglasses", icon: <GiSunglasses className="text-white text-xl" /> },
   ];
 
   const [products, setProducts] = useState([]);
@@ -24,11 +27,23 @@ const Product = () => {
   const [modalProduct, setModalProduct] = useState(null);
   const [favorites, setFavorites] = useState([]);
 
+  // Scroll to top when component mounts or URL category changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [urlCategory]);
+
   useEffect(() => {
     // Load favorites from localStorage
     const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
     setFavorites(storedFavorites);
   }, []);
+
+  useEffect(() => {
+    // Set initial category from URL parameter
+    if (urlCategory && categories.some(cat => cat.key === urlCategory)) {
+      setSelectedCategory(urlCategory);
+    }
+  }, [urlCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -44,7 +59,7 @@ const Product = () => {
           const results = await Promise.all(
             categories.map(async (category) => {
               const response = await axios.get(
-                `https://dummyjson.com/products/category/${category}`
+                `https://dummyjson.com/products/category/${category.key}`
               );
               return response.data.products;
             })
@@ -63,8 +78,15 @@ const Product = () => {
 
   const handleAddToCart = (product) => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedCart = [...storedCart, product];
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    const existingItemIndex = storedCart.findIndex(item => item.id === product.id);
+    
+    if (existingItemIndex !== -1) {
+      storedCart[existingItemIndex].quantity = (storedCart[existingItemIndex].quantity || 1) + 1;
+    } else {
+      storedCart.push({ ...product, quantity: 1 });
+    }
+    
+    localStorage.setItem("cart", JSON.stringify(storedCart));
     alert(`"${product.title}" has been added to the cart.`);
   };
 
@@ -106,36 +128,52 @@ const Product = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-30 flex gap-6 px-6 md:px-12 ">
+    <div className="min-h-screen bg-gray-50 pt-30 flex gap-12 px-6 md:px-12 ">
       {/* Sidebar */}
-      <aside className="hidden md:flex items-start flex-col sticky top-24 h-[calc(100vh-6rem)] w-52 bg-white rounded-lg shadow-md p-6 overflow-y-auto">
-        <h3 className="text-3xl font-bold text-center mb-6 text-[#326287]">Filter</h3>
+      <aside className="hidden md:flex items-center gap-2 flex-col h-[100%] sticky top-24 w-64 bg-white rounded-lg shadow-md p-6"
+        style={{
+          background:
+            "linear-gradient(50deg, #326287 25%, #D59C8C 85%, #E8B09E 100%)",
+          transition: "background 0.5s ease-in-out",
+        }}
+      >
+        <div className="mt-auto pb-4 w-full border-b border-white">
+          <h3 className="text-2xl font-bold text-center text-white">
+            Filter
+          </h3>
+        </div>
+        
         <button
           onClick={() => setSelectedCategory(null)}
-          className={`mb-3 text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
-            !selectedCategory ? "font-bold underline" : "font-normal"
+          className={`w-full mt-3 flex font-medium items-center gap-3 px-4 py-3 rounded-lg capitalize transition-colors ${
+            !selectedCategory
+              ? "bg-[#e8b09e]/60 text-white"
+              : "text-white hover:bg-[#e8b09e]/20"
           }`}
         >
+          <BsStars className="text-lg"/>
           All Categories
         </button>
+        
         {categories.map((cat) => (
           <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`mb-2 capitalize text-left text-[#326287] hover:text-[#D59C8C] transition-colors ${
-              selectedCategory === cat
-                ? "font-semibold underline"
-                : "font-normal"
+            key={cat.key}
+            onClick={() => setSelectedCategory(cat.key)}
+            className={`w-full font-medium flex items-center gap-3 px-4 py-3 rounded-lg capitalize transition-colors ${
+              selectedCategory === cat.key
+                ? "bg-[#e8b09e]/60 text-white"
+                : "text-white hover:bg-[#e8b09e]/20"
             }`}
           >
-            {cat.replace(/-/g, " ")}
+            {cat.icon}
+            {cat.label}
           </button>
         ))}
       </aside>
 
       {/* Products */}
       <main className="flex-1">
-        {error && <p className="text-red-400 mb-4">{error}</p>}
+        {error && <p className="text-[#326287] mb-4">{error}</p>}
         {loading ? (
           <p className="text-center text-lg text-[#326287]">Loading products...</p>
         ) : (
@@ -166,9 +204,9 @@ const Product = () => {
                         className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white transition-colors"
                       >
                         {isFavorite(product.id) ? (
-                          <BsHeartFill className="text-red-500" />
+                          <BsHeartFill className="text-[#326287]" />
                         ) : (
-                          <BsHeart className="text-gray-500" />
+                          <BsHeart className="text-[#326287]" />
                         )}
                       </button>
                     </>

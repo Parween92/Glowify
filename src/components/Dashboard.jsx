@@ -70,7 +70,6 @@ export const Dashboard = () => {
             
             {/* Coupon Code  */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Coupon Code */}
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h3 className="text-xl font-semibold text-[#326287] mb-4">Redeem Coupon Code</h3>
                 <form onSubmit={handleCouponSubmit} className="space-y-3">
@@ -304,7 +303,7 @@ export const Dashboard = () => {
           ))}
         </nav>
 
-        <div className="mt-auto pt-4 border-t border-gray-200">
+        <div className="mt-auto pt-4 border-t border-white">
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white hover:bg-[#e8b09e]/20"

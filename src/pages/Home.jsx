@@ -7,6 +7,7 @@ import { HiArrowUturnLeft } from "react-icons/hi2";
 import { GoPackageDependents } from "react-icons/go";
 import { CiCreditCard1 } from "react-icons/ci";
 import { BsCart2, BsFire } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 const SALE_PRODUCT_IDS = [1, 5];
 
@@ -29,22 +30,17 @@ const categories = [
     icon: <GiPerfumeBottle className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "shoes",
+    key: "womens-shoes",
     label: "Shoes",
     icon: <FaShoePrints className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "watches",
-    label: "Watches",
-    icon: <MdWatch className="text-[#e8b09e] text-3xl md:text-4xl" />,
-  },
-  {
-    key: "bags",
+    key: "womens-bags",
     label: "Bags",
     icon: <FaShoppingBag className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
   {
-    key: "jewellery",
+    key: "womens-jewellery",
     label: "Jewellery",
     icon: <FaRegGem className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
@@ -52,11 +48,6 @@ const categories = [
     key: "sunglasses",
     label: "Sunglasses",
     icon: <GiSunglasses className="text-[#e8b09e] text-3xl md:text-4xl" />,
-  },
-  {
-    key: "accessories",
-    label: "Accessories",
-    icon: <FaRegGem className="text-[#e8b09e] text-3xl md:text-4xl" />,
   },
 ];
 
@@ -95,7 +86,7 @@ export const Home = () => {
           playsInline
         />
         <div className="absolute inset-0 bg-black/35 flex flex-col items-center justify-center">
-          <h1 className="text-white text-5xl md:text-7xl font-extrabold drop-shadow-xl tracking-wide font-sans mb-3">
+          <h1 className="text-white text-5xl md:text-7xl font-bold drop-shadow-xl tracking-wide mb-3">
             Glowify Your Life
           </h1>
           <span className="text-white text-lg md:text-2xl font-light drop-shadow-lg">
@@ -191,11 +182,11 @@ export const Home = () => {
             </h2>
             <div className="w-auto grid grid-cols-2 gap-12">
               {categories.map((category) => (
-                <a
+                <Link
                   key={category.key}
-                  href={`/category/${category.key}`}
+                  to={`/products?category=${category.key}`}
                   className="flex flex-col items-center justify-center bg-white rounded-xl shadow-lg group p-4 hover:shadow-2xl 
-      transition border border-[#e8b09e]/30 cursor-pointer h-[110px] w-[130px]"
+      transition border border-[#e8b09e]/30 cursor-pointer h-[160px] w-[190px]"
                 >
                   <div className="text-[#e8b09e] text-3xl mb-2 scale-105 group-hover:scale-110 transition">
                     {category.icon}
@@ -203,7 +194,7 @@ export const Home = () => {
                   <span className="text-sm font-semibold text-[#326287]">
                     {category.label}
                   </span>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -218,7 +209,7 @@ export const Home = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-15 justify-center items-center">
           {brands.map((brand) => (
             <div
-              key={brand.name} // Problem: brand.name ist undefined!
+              key={brand.name}
               className="flex flex-col items-center p-4 rounded-xl bg-[#e8b09e] shadow-lg group hover:shadow-2xl 
        border border-[#e8b09e]/30 transition"
             >
