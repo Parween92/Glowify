@@ -14,24 +14,36 @@ import { BiLogOut } from "react-icons/bi";
 export const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("profile");
   const [user, setUser] = useState({
-    name: "John Doe",
-    email: "john@example.com",
+    name: "Placeholder User",
+    email: "placeholder@example.com",
   });
+
   const [favorites, setFavorites] = useState([]);
   const [couponCode, setCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
   const [points, setPoints] = useState(350);
   const pointsNeeded = 500;
   const progressPercentage = (points / pointsNeeded) * 100;
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    // Hier User aus localStorage
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setUser(storedUser);
     }
     const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(storedFavorites);
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    setOrders(storedOrders);
+  }, []);
+
+  useEffect(() => {
+    const onStorageChange = () => {
+      const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+      setOrders(storedOrders);
+    };
+    window.addEventListener("storage", onStorageChange);
+    return () => window.removeEventListener("storage", onStorageChange);
   }, []);
 
   const removeFavorite = (productId) => {
@@ -82,7 +94,6 @@ export const Dashboard = () => {
             <h2 className="text-xl font-bold text-[#326287] mb-6">
               Welcome back, {user?.name || "Gast"}
             </h2>
-            {/* Coupon Code */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h3 className="text-xl font-semibold text-[#326287] mb-4">
@@ -110,12 +121,10 @@ export const Dashboard = () => {
                   </div>
                 )}
               </div>
-              {/* Offers */}
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h3 className="text-xl font-semibold text-[#326287] mb-4">
                   Special Offers for You
                 </h3>
-                {/* Coupon */}
                 <div className="relative bg-gradient-to-r from-[#e8b09e] to-[#D59C8C] rounded-lg p-4 text-white">
                   <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full">
                     <div className="border-t-2 border-dotted border-gray-200"></div>
@@ -196,7 +205,42 @@ export const Dashboard = () => {
               Your Orders
             </h2>
             <div className="bg-white rounded-xl shadow-md p-6">
-              <p className="text-[#326287]/70">No orders found.</p>
+              {orders.length === 0 ? (
+                <p className="text-[#326287]/70">No orders found.</p>
+              ) : (
+                <ul className="space-y-6">
+                  {orders.map((order, idx) => (
+                    <li
+                      key={order.orderId || idx}
+                      className="border-b border-gray-200 pb-4"
+                    >
+                      <div className="font-bold text-[#326287]">
+                        Order ID: {order.orderId}
+                      </div>
+                      <div className="text-sm text-[#326287] mb-2">
+                        Date: {new Date(order.date).toLocaleString()}
+                      </div>
+                      <div className="mb-2 text-[#326287] ">
+                        Total: {order.total.toFixed(2)} €
+                      </div>
+                      <div className="text-[#326287] ">
+                        Items:
+                        <ul className="text-[#326287] list-disc ml-6">
+                          {order.items.map((item) => (
+                            <li key={item.id}>
+                              {item.title} (x{item.quantity || 1}) -{" "}
+                              {(
+                                parseFloat(item.price) * (item.quantity || 1)
+                              ).toFixed(2)}{" "}
+                              €
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         );

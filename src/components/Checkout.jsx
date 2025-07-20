@@ -16,7 +16,7 @@ const Checkout = () => {
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-    cardName: ""
+    cardName: "",
   });
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const Checkout = () => {
   const totalAmount = cartItems.reduce((total, item) => {
     const price = parseFloat(item.price) || 0;
     const quantity = item.quantity || 1;
-    return total + (price * quantity);
+    return total + price * quantity;
   }, 0);
 
   const shippingCost = 5.99;
@@ -40,9 +40,9 @@ const Checkout = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -50,17 +50,23 @@ const Checkout = () => {
     e.preventDefault();
     setIsProcessing(true);
 
+    const order = {
+      items: cartItems,
+      total: finalTotal,
+      orderId: Math.random().toString(36).substr(2, 9).toUpperCase(),
+      date: new Date().toISOString(),
+      customer: formData,
+    };
+
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    storedOrders.push(order);
+    localStorage.setItem("orders", JSON.stringify(storedOrders));
+
     setTimeout(() => {
       localStorage.removeItem("cart");
       setIsProcessing(false);
-      navigate("/order-success", { 
-        state: { 
-          orderData: {
-            items: cartItems,
-            total: finalTotal,
-            orderId: Math.random().toString(36).substr(2, 9).toUpperCase()
-          }
-        }
+      navigate("/order-success", {
+        state: { orderData: order },
       });
     }, 3000);
   };
@@ -73,13 +79,16 @@ const Checkout = () => {
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Bestellübersicht */}
           <div className="bg-white h-auto rounded-xl shadow-md p-6">
-            <h3 className="text-xl font-bold mb-4 text-[#326287]">Order Summary</h3>
-            
+            <h3 className="text-xl font-bold mb-4 text-[#326287]">
+              Order Summary
+            </h3>
             <div className="space-y-4 mb-6">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex items-center gap-4 border-b border-gray-200 pb-4">
+                <div
+                  key={item.id}
+                  className="flex items-center gap-4 border-b border-gray-200 pb-4"
+                >
                   <img
                     src={item.image || (item.images && item.images[0])}
                     alt={item.title}
@@ -87,28 +96,35 @@ const Checkout = () => {
                   />
                   <div className="flex items-end justify-between w-full">
                     <div className="flex-1">
-                    <p className="text-[#326287]">{item.title}</p>
-                    <p className="text-[#D59C8C]">{item.price} €</p>
-                    <p className="text-[#326287] text-sm">
-                      Quantity: {item.quantity || 1}
-                    </p>
+                      <p className="text-[#326287]">{item.title}</p>
+                      <p className="text-[#D59C8C]">{item.price} €</p>
+                      <p className="text-[#326287] text-sm">
+                        Quantity: {item.quantity || 1}
+                      </p>
                     </div>
                     <p className="text-[#326287] text-sm">
-                      Subtotal: {(parseFloat(item.price) * (item.quantity || 1)).toFixed(2)} €
+                      Subtotal:{" "}
+                      {(parseFloat(item.price) * (item.quantity || 1)).toFixed(
+                        2
+                      )}{" "}
+                      €
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-
             <div className="space-y-2 text-[#326287]">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
-                <span className="text-[#D59C8C]">{totalAmount.toFixed(2)} €</span>
+                <span className="text-[#D59C8C]">
+                  {totalAmount.toFixed(2)} €
+                </span>
               </div>
               <div className="flex pb-4 justify-between">
                 <span>Shipping:</span>
-                <span className="text-[#D59C8C]">{shippingCost.toFixed(2)} €</span>
+                <span className="text-[#D59C8C]">
+                  {shippingCost.toFixed(2)} €
+                </span>
               </div>
               <div className="flex pt-4 justify-between font-bold text-lg text-[#326287] border-t border-gray-200">
                 <span>Total:</span>
@@ -117,12 +133,12 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Zahlung */}
           <div className="bg-white rounded-xl shadow-md p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Kontakt */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-[#326287]">Contact Information</h3>
+                <h3 className="text-lg font-semibold mb-4 text-[#326287]">
+                  Contact Information
+                </h3>
                 <input
                   type="email"
                   name="email"
@@ -130,13 +146,14 @@ const Checkout = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 
+                  focus:ring-[#264a66]"
                 />
               </div>
-
-              {/* Lieferadresse */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-[#326287]">Shipping Address</h3>
+                <h3 className="text-lg font-semibold mb-4 text-[#326287]">
+                  Shipping Address
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <input
                     type="text"
@@ -145,7 +162,8 @@ const Checkout = () => {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1
+                     focus:ring-[#264a66]"
                   />
                   <input
                     type="text"
@@ -154,7 +172,8 @@ const Checkout = () => {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1
+                     focus:ring-[#264a66]"
                   />
                 </div>
                 <input
@@ -164,7 +183,8 @@ const Checkout = () => {
                   value={formData.address}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 
+                  focus:ring-[#264a66]"
                 />
                 <div className="grid pt-4 grid-cols-2 gap-4">
                   <input
@@ -174,7 +194,8 @@ const Checkout = () => {
                     value={formData.city}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1
+                     focus:ring-[#264a66]"
                   />
                   <input
                     type="text"
@@ -183,12 +204,11 @@ const Checkout = () => {
                     value={formData.postalCode}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 
+                    focus:ring-[#264a66]"
                   />
                 </div>
               </div>
-
-              {/* Zahlungsinformationen */}
               <div>
                 <h3 className="text-lg font-semibold mb-4 text-[#326287] flex items-center gap-2">
                   <FiCreditCard />
@@ -201,7 +221,8 @@ const Checkout = () => {
                   value={formData.cardName}
                   onChange={handleInputChange}
                   required
-                  className="w-full mb-6 px-3 py-2 rounded text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  className="w-full mb-6 px-3 py-2 rounded text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1
+                   focus:ring-[#264a66]"
                 />
                 <input
                   type="text"
@@ -210,7 +231,8 @@ const Checkout = () => {
                   value={formData.cardNumber}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 rounded mb-6 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                  className="w-full px-3 py-2 rounded mb-6 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 
+                  focus:ring-[#264a66]"
                 />
                 <div className="grid grid-cols-2 gap-4">
                   <input
@@ -220,7 +242,8 @@ const Checkout = () => {
                     value={formData.expiryDate}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 
+                    focus:ring-[#264a66]"
                   />
                   <input
                     type="text"
@@ -229,18 +252,15 @@ const Checkout = () => {
                     value={formData.cvv}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none focus:ring-1 focus:ring-[#264a66]"
+                    className="w-full px-3 py-2 rounded mb-2 text-[#326287] placeholder-[#3262879c] border-1 focus:outline-none
+                     focus:ring-1 focus:ring-[#264a66]"
                   />
                 </div>
               </div>
-
-              {/* Sicherheitshinweis */}
               <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
                 <FiLock className="text-green-600" />
                 <span>Your payment information is secure and encrypted</span>
               </div>
-
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isProcessing}
